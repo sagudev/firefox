@@ -562,5 +562,64 @@ def test_os_integration_includes_snap_basic_2404():
     assert "snap-upstream-test-basic-2404-amd64-try-only/opt" not in selected
 
 
+def test_firefox_pull_request_tasks_release_tag_push():
+    method = get_method("firefox_pull_request_tasks")
+    tasks = {
+        "spidermonkey-sm-package-linux64/opt": Task(
+            kind="spidermonkey",
+            label="spidermonkey-sm-package-linux64/opt",
+            attributes={},
+            task={},
+        ),
+        "hazard-linux64-haz/debug": Task(
+            kind="hazard",
+            label="hazard-linux64-haz/debug",
+            attributes={},
+            task={},
+        ),
+        "build-linux64/opt": Task(
+            kind="build",
+            label="build-linux64/opt",
+            attributes={},
+            task={},
+        ),
+    }
+    graph = TaskGraph(tasks, Graph(nodes=set(tasks), edges=set()))
+    params = {
+        "tasks_for": "github-push",
+        "head_tag": "FIREFOX_140_0_RELEASE",
+    }
+
+    assert method(graph, params, {}) == [
+        "spidermonkey-sm-package-linux64/opt",
+        "hazard-linux64-haz/debug",
+    ]
+
+
+def test_firefox_pull_request_tasks_non_release_tag_push():
+    method = get_method("firefox_pull_request_tasks")
+    tasks = {
+        "spidermonkey-sm-package-linux64/opt": Task(
+            kind="spidermonkey",
+            label="spidermonkey-sm-package-linux64/opt",
+            attributes={},
+            task={},
+        ),
+        "hazard-linux64-haz/debug": Task(
+            kind="hazard",
+            label="hazard-linux64-haz/debug",
+            attributes={},
+            task={},
+        ),
+    }
+    graph = TaskGraph(tasks, Graph(nodes=set(tasks), edges=set()))
+    params = {
+        "tasks_for": "github-push",
+        "head_tag": "FIREFOX_140_0_BUILD1",
+    }
+
+    assert method(graph, params, {}) == []
+
+
 if __name__ == "__main__":
     main()

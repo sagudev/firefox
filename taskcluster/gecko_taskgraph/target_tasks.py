@@ -70,6 +70,11 @@ UNCOMMON_TRY_TASK_LABELS = [
     "upload-symbols",
 ]
 
+GITHUB_RELEASE_TAG_TASKS = (
+    "spidermonkey-sm-package-linux64/opt",
+    "hazard-linux64-haz/debug",
+)
+
 
 def index_exists(index_path, reason=""):
     print(f"Looking for existing index {index_path} {reason}...")
@@ -1789,6 +1794,16 @@ def target_tasks_android_macrobenchmark_daily(
 
 @register_target_task("firefox_pull_request_tasks")
 def target_firefox_pull_requests(full_task_graph, parameters, graph_config):
+    if parameters["tasks_for"] == "github-push":
+        head_tag = parameters.get("head_tag") or ""
+        if head_tag.endswith("_RELEASE"):
+            return [
+                label
+                for label in GITHUB_RELEASE_TAG_TASKS
+                if label in full_task_graph.tasks
+            ]
+        return []
+
     if parameters["tasks_for"] != "github-pull-request":
         return []
 
