@@ -562,7 +562,7 @@ def test_os_integration_includes_snap_basic_2404():
     assert "snap-upstream-test-basic-2404-amd64-try-only/opt" not in selected
 
 
-def test_firefox_pull_request_tasks_release_tag_push():
+def test_firefox_github_push_release_tag():
     method = get_method("firefox_pull_request_tasks")
     tasks = {
         "spidermonkey-sm-package-linux64/opt": Task(
@@ -596,7 +596,7 @@ def test_firefox_pull_request_tasks_release_tag_push():
     ]
 
 
-def test_firefox_pull_request_tasks_non_release_tag_push():
+def test_firefox_github_push_non_release_tag():
     method = get_method("firefox_pull_request_tasks")
     tasks = {
         "spidermonkey-sm-package-linux64/opt": Task(
