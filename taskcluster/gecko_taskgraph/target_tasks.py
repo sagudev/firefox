@@ -1807,8 +1807,8 @@ def target_firefox_pull_requests(full_task_graph, parameters, graph_config):
         return labels
 
     if parameters["tasks_for"] == "github-push":
-        head_tag = parameters.get("head_tag") or ""
-        if head_tag.endswith("_RELEASE"):
+        head_tag = parameters.get("head_tag")
+        if head_tag and head_tag.endswith("_RELEASE"):
             return [
                 label
                 for label in GITHUB_RELEASE_TAG_TASKS
