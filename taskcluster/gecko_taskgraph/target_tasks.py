@@ -1794,6 +1794,18 @@ def target_tasks_android_macrobenchmark_daily(
 
 @register_target_task("firefox_pull_request_tasks")
 def target_firefox_pull_requests(full_task_graph, parameters, graph_config):
+    if parameters["tasks_for"] == "github-pull-request":
+        labels = []
+        for label, task in full_task_graph.tasks.items():
+            # Always add the code review analysis & ending tasks
+            if task.attributes.get("code-review") or task.kind == "code-review":
+                labels.append(label)
+
+            elif not standard_filter(task, parameters):
+                continue
+
+        return labels
+
     if parameters["tasks_for"] == "github-push":
         head_tag = parameters.get("head_tag") or ""
         if head_tag.endswith("_RELEASE"):
@@ -1802,18 +1814,5 @@ def target_firefox_pull_requests(full_task_graph, parameters, graph_config):
                 for label in GITHUB_RELEASE_TAG_TASKS
                 if label in full_task_graph.tasks
             ]
-        return []
 
-    if parameters["tasks_for"] != "github-pull-request":
-        return []
-
-    labels = []
-    for label, task in full_task_graph.tasks.items():
-        # Always add the code review analysis & ending tasks
-        if task.attributes.get("code-review") or task.kind == "code-review":
-            labels.append(label)
-
-        elif not standard_filter(task, parameters):
-            continue
-
-    return labels
+    return []
