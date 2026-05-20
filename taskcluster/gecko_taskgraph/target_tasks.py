@@ -1793,7 +1793,7 @@ def target_tasks_android_macrobenchmark_daily(
 
 
 @register_target_task("firefox_pull_request_tasks")
-def target_firefox_pull_requests(full_task_graph, parameters, graph_config):
+def target_firefox_github_events(full_task_graph, parameters, graph_config):
     if parameters["tasks_for"] == "github-pull-request":
         labels = []
         for label, task in full_task_graph.tasks.items():
